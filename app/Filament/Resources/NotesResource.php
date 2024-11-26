@@ -11,6 +11,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Hidden;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\MarkdownEditor;
 use Illuminate\Database\Eloquent\Builder;
@@ -37,6 +38,8 @@ class NotesResource extends Resource
                         'codeBlock',
                         'table'
                     ]),
+                Hidden::make('user_id')
+                    ->default(auth()->id()),
             ])->columns(1);
     }
 
@@ -71,6 +74,11 @@ class NotesResource extends Resource
         return [
             //
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->where('user_id', auth()->id());
     }
 
     public static function getPages(): array
