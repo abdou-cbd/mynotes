@@ -10,6 +10,9 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\MarkdownEditor;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -24,7 +27,17 @@ class NotesResource extends Resource
         return $form
             ->schema([
                 //
-            ]);
+                TextInput::make('Title')->required(),
+                MarkdownEditor::make('Note_content')
+                    ->required()
+                    ->disableToolbarButtons([
+                        'link',
+                        'strike',
+                        'attachFiles',
+                        'codeBlock',
+                        'table'
+                    ]),
+            ])->columns(1);
     }
 
     public static function table(Table $table): Table
@@ -32,12 +45,19 @@ class NotesResource extends Resource
         return $table
             ->columns([
                 //
+                TextColumn::make('id'),
+                TextColumn::make('Title')
+                    ->searchable(),
+                TextColumn::make('Note_content')
+                    ->limit(80),
+
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
