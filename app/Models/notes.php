@@ -16,8 +16,8 @@ class notes extends Model
         'user_id',
     ];
 
-    public function User()
+    public function user()
     {
-        return $this->belongsTo(user::class);
+        return $this->belongsTo(User::class);
     }
 }
